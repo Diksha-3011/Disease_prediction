@@ -1,205 +1,169 @@
-# 🩺 Symptom Check — Disease Prediction System
-
-A simple machine-learning based health prediction project that takes a user's **age, gender, temperature, and symptoms** and predicts the most likely health condition.
-
-The project uses a **Flask backend** for prediction and a simple **HTML, CSS, and JavaScript frontend** for the user interface.
-
-> **Note:** This project is created for learning and demonstration purposes. It is not intended to provide medical diagnosis or medical advice.
-
+🩺 Multi-Model Health Condition Prediction System
+A machine-learning web application that uses patient details and selected symptoms to estimate possible health conditions. The project combines five classification models — XGBoost, LightGBM, Decision Tree, Random Forest, and K-Nearest Neighbors (KNN) — and presents the top three predicted conditions in a web interface.
+> **Disclaimer:** This project is for educational and demonstration purposes only. It does not provide a medical diagnosis and must not replace advice from a qualified healthcare professional.
 ---
-
-## ✨ Features
-
-* Enter basic patient information
-* Select symptoms from the frontend
-* Send prediction requests to a Flask API
-* Predict the most likely health condition
-* Display prediction confidence
-* Show other possible conditions
-* Simple and lightweight frontend
-* Easy to run locally
-
+✨ Features
+Enter age, gender, and temperature.
+Select symptoms through the web interface.
+Train and use five machine-learning classification models.
+Combine model predictions using model probability and validation accuracy.
+Display the top three ranked possible conditions.
+Show confidence-score bars with gradient colors.
+Connect the frontend to a Flask prediction API.
+🛠️ Tech Stack
+Area	Technologies
+Programming	Python
+Data handling	Pandas, NumPy
+Machine learning	Scikit-learn, XGBoost, LightGBM
+Preprocessing	StandardScaler, LabelEncoder
+Model storage	Joblib
+Backend	Flask, Flask-CORS
+Frontend	HTML, CSS, JavaScript
+Visualization	Matplotlib
 ---
-
-## 🛠️ Tech Stack
-
-### Frontend
-
-* HTML
-* CSS
-* JavaScript
-
-### Backend
-
-* Python
-* Flask
-* Flask-CORS
-
-### Machine Learning
-
-* Scikit-learn
-* Decision Tree Classifier
-* Pandas
-* Joblib
-
-### Dataset
-
-* `Copy_of_Health.csv`
-
+📸 Project Screenshots
+Symptom Check Interface
+Enter patient details, select symptoms, and view the model's predictions.
+![Symptom Check Interface](screenshots/symptom-check-ui.png)
+Disease Distribution
+Dataset distribution visualization for the health-condition classes.
+![Disease Distribution](screenshots/disease-distribution.png)
+> Keep the `screenshots` folder alongside this README when uploading the project to GitHub so these images display correctly.
 ---
-
-## 📁 Project Structure
-
+🔄 System Workflow
+```text
+Health Dataset
+      ↓
+Data Preparation and Feature Selection
+      ↓
+Train/Test Split and Preprocessing
+      ↓
+ ┌──────────┬──────────┬──────────────┐
+ ↓          ↓          ↓              ↓
+XGBoost   LightGBM  Decision Tree  Random Forest + KNN
+ └──────────────┬─────────────────────┘
+                ↓
+        Model Predictions
+                ↓
+  Combine probabilities and model accuracy
+                ↓
+        Rank possible conditions
+                ↓
+        Return top 3 results
+                ↓
+          Flask API
+                ↓
+       HTML / CSS / JavaScript
+```
+📂 Dataset
+The dataset file used by the project is:
+```text
+Copy_of_Health.csv
+```
+The prediction target is `Problem`. Identifier columns such as `id` and `PID` are excluded from the model input.
+The dataset includes classes such as:
+Acidity
+Allergic Side Effects
+Dengue
+Kidney Infection or Stone
+Pneumonia or TB
+Pneumonia or TB or COVID
+Stomach Infection
+cold and cough
+The exact class names and available features depend on the supplied dataset.
+🤖 Machine-Learning Models
+Model	Overview
+XGBoost	Gradient-boosted decision trees
+LightGBM	Efficient gradient-boosting framework
+Decision Tree	Tree-based classification
+Random Forest	Ensemble of decision trees
+K-Nearest Neighbors (KNN)	Classification using nearby training samples
+🧠 Ensemble Prediction
+The application uses predictions from the five trained models rather than relying only on a single classifier. The intended scoring approach combines each model's class probability with that model's validation accuracy, aggregates the scores, and ranks the possible conditions.
+The interface displays up to three results:
+Priority 1 — highest combined score
+Priority 2 — second-highest combined score
+Priority 3 — third-highest combined score
+The displayed score is a model-derived estimate, not the probability that a person truly has a condition. Its reliability depends on dataset quality, model validation, and calibration.
+🧩 Input Features
+The frontend collects patient details and symptom values, including:
+Age
+Gender
+Fever / temperature
+Body pain
+Cough and cold
+Chest pain
+Breathing problem
+Throat pain
+Head pain
+Stomach pain
+Diarrhea
+Vomiting
+Back pain
+Swollen feet
+Feature names and encodings in the frontend must match those expected by the trained models. In the current frontend, symptom values are represented as `1` for selected/Yes and `2` for not selected/No; verify that this matches the dataset's encoding.
+📁 Project Structure
 ```text
 health_app/
-│
 ├── backend/
 │   ├── app.py
 │   ├── train_model.py
 │   ├── Copy_of_Health.csv
 │   ├── requirements.txt
-│   │
 │   └── model/
+│       ├── xgboost_model.joblib
+│       ├── lightgbm_model.joblib
 │       ├── decision_tree_model.joblib
-│       └── scaler.joblib
-│
-└── frontend/
-    ├── index.html
-    ├── style.css
-    └── script.js
+│       ├── random_forest_model.joblib
+│       ├── knn_model.joblib
+│       ├── scaler.joblib
+│       ├── feature_order.joblib
+│       ├── accuracies.joblib
+│       └── label_encoder.joblib
+├── frontend/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+├── screenshots/
+│   ├── symptom-check-ui.png
+│   └── disease-distribution.png
+└── README.md
 ```
-
----
-
-## 🔄 How It Works
-
-The basic workflow of the application is:
-
-```text
-User enters details
-        ↓
-Age + Gender + Temperature
-        ↓
-Select symptoms
-        ↓
-Frontend sends JSON request
-        ↓
-Flask API receives the data
-        ↓
-Machine Learning Model
-        ↓
-Prediction + Confidence
-        ↓
-Result shown on the webpage
-```
-
----
-
-## 📊 Input Features
-
-The model uses the following 16 features:
-
-| Feature             | Description          |
-| ------------------- | -------------------- |
-| `age`               | Patient age          |
-| `gender`            | Gender value         |
-| `bodypain`          | Body pain            |
-| `Hollow`            | Hollow               |
-| `cold and cough`    | Cold and cough       |
-| `cough`             | Cough                |
-| `fever`             | Temperature          |
-| `chest pain`        | Chest pain           |
-| `breathing problem` | Breathing difficulty |
-| `Throat pain`       | Throat pain          |
-| `head pain`         | Head pain            |
-| `stomach pain`      | Stomach pain         |
-| `diarrhea`          | Diarrhea             |
-| `omitting`          | Vomiting             |
-| `back pain`         | Back pain            |
-| `Swollen feet`      | Swollen feet         |
-
-For symptom fields:
-
-```text
-1 = Yes
-2 = No
-```
-
----
-
-## 🚀 Getting Started
-
-### 1. Clone the repository
-
-```bash
-git clone <your-repository-url>
-cd health_app
-```
-
-### 2. Go to the backend
-
+The model filenames shown above are expected examples; make sure they match the files generated by your actual training script.
+🚀 Getting Started
+1. Open the backend directory
 ```bash
 cd backend
 ```
-
-### 3. Install dependencies
-
+2. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
-
-### 4. Train the model
-
-If the model file is not already available:
-
+If you do not have a `requirements.txt`, install the packages used by your project, for example:
+```bash
+pip install flask flask-cors pandas numpy scikit-learn joblib xgboost lightgbm
+```
+3. Train the models
+Run this if the model artifacts have not already been generated:
 ```bash
 python train_model.py
 ```
-
-This creates the trained model inside the `model` folder.
-
-### 5. Start the Flask server
-
+4. Start the backend
 ```bash
 python app.py
 ```
-
-The backend will run at:
-
+The local API is expected at:
 ```text
 http://127.0.0.1:5000
 ```
-
-Keep this terminal running.
-
----
-
-## 🌐 Run the Frontend
-
-Open:
-
-```text
-frontend/index.html
+5. Open the frontend
+Open `frontend/index.html` in a browser or serve the frontend using a local development server. Keep the Flask backend running while using the page.
+🔌 Prediction API
+The frontend sends a JSON request to:
+```http
+POST /predict
 ```
-
-in your browser.
-
-Enter the required information, select symptoms, and click:
-
-**Predict Condition**
-
-The frontend sends the information to the Flask API and displays the prediction returned by the model.
-
----
-
-## 🔌 API
-
-### `POST /predict`
-
-The API accepts patient information in JSON format.
-
-Example:
-
+Example request shape:
 ```json
 {
   "age": 35,
@@ -220,101 +184,16 @@ Example:
   "swollen_feet": 2
 }
 ```
-
-Example response:
-
-```json
-{
-  "prediction": "Dengue",
-  "confidence": 1.0,
-  "top": [
-    {
-      "condition": "Dengue",
-      "probability": 1.0
-    },
-    {
-      "condition": "Acidity",
-      "probability": 0.0
-    },
-    {
-      "condition": "Allergic Side Effects",
-      "probability": 0.0
-    }
-  ]
-}
-```
-
+The precise response fields are defined by `backend/app.py`. The frontend shown in this project expects a `top` array containing objects with `condition` and `probability` fields.
+📝 Important Notes
+Train and serve models using compatible versions of their libraries.
+Ensure that the feature order used at prediction time is identical to the training feature order.
+Apply the same preprocessing during training and prediction.
+Confirm that class labels and symptom encodings match the dataset.
+A high confidence score is not a guarantee of correctness.
+Do not use this application to make healthcare decisions.
+🎯 Project Objective
+The project demonstrates an end-to-end machine-learning workflow: preparing a dataset, training multiple classifiers, combining model outputs, serving predictions through Flask, and displaying ranked results in a browser.
 ---
-
-## ⚙️ Input Validation
-
-The backend currently accepts:
-
-* **Age:** 15–95
-* **Gender:** 1 or 2
-* **Temperature:** 95–108
-
-The dataset itself contains temperature values mainly between **97 and 105**.
-
-Invalid input is returned with HTTP status:
-
-```text
-400 Bad Request
-```
-
----
-
-## 🧠 Model
-
-The current version uses a **Decision Tree Classifier** trained on the health dataset.
-
-The model is saved using Joblib:
-
-```text
-decision_tree_model.joblib
-```
-
-If scaling was used during training, the corresponding scaler is also stored:
-
-```text
-scaler.joblib
-```
-
-The application loads these files when the Flask server starts.
-
----
-
-## 📝 Important Notes
-
-* The dataset uses `Problem` as the prediction target.
-* `id` and `PID` are not used as model input features.
-* The dataset column `omitting` is displayed as **Vomiting** in the frontend.
-* Gender values depend on the original dataset encoding.
-* A fully grown Decision Tree can produce very high confidence values, sometimes even 100%.
-* High model confidence should not be interpreted as medical certainty.
-
----
-
-## 🎯 Purpose
-
-This project demonstrates how a machine-learning model can be connected to a web application.
-
-It combines:
-
-```text
-Machine Learning
-       +
-Flask API
-       +
-HTML/CSS/JavaScript
-       =
-End-to-End ML Web Application
-```
-
----
-
-## ⚠️ Disclaimer
-
-This project is intended **only for educational and demonstration purposes**.
-
-It should not be used as a substitute for professional medical advice, diagnosis, or treatment.
+⚠️ Medical Disclaimer
+This application is a student/educational project. It is not clinically validated and must not be used to diagnose, treat, or rule out any disease. For health concerns, consult a qualified healthcare professional.
