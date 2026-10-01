@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Symptom check</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="masthead">
+    <h1>Symptom check</h1>
+    <p>Enter the patient's details and symptoms. A Decision Tree model trained on 7,855 patient records suggests the most likely condition.</p>
+  </header>
+
+  <main class="layout">
+    <form id="form" class="panel" novalidate>
+      <section class="group">
+        <h2>Patient</h2>
+        <div class="fields">
+          <label class="field">
+            <span>Age (15 to 95)</span>
+            <input type="number" id="age" min="15" max="95" step="1" value="35" required>
+          </label>
+          <label class="field">
+            <span>Gender</span>
+            <select id="gender">
+              <option value="1">Male</option>
+              <option value="2">Female</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2>Body temperature</h2>
+        <div class="thermo" id="thermo">
+          <div class="readout"><span id="fever-value">101</span><small>°F</small></div>
+          <input type="range" id="fever" min="97" max="105" step="1" value="101" aria-label="Body temperature in Fahrenheit">
+          <div class="ticks" aria-hidden="true">
+            <span>97</span><span>98</span><span>99</span><span>100</span><span>101</span><span>102</span><span>103</span><span>104</span><span>105</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2>Symptoms</h2>
+        <p class="hint">Select every symptom the patient has. <span id="count">None selected.</span></p>
+        <div id="symptoms" class="chips"></div>
+      </section>
+
+      <div class="actions">
+        <button type="submit" id="predict" class="primary">Predict condition</button>
+        <button type="button" id="reset" class="ghost">Clear form</button>
+      </div>
+    </form>
+
+    <aside class="result" id="result" aria-live="polite">
+      <div id="state-empty">
+        <h2>Result</h2>
+        <p>Fill in the form and choose Predict condition. The suggested condition appears here.</p>
+      </div>
+
+      <div id="state-loading" hidden>
+        <h2>Result</h2>
+        <p>Checking the model…</p>
+      </div>
+
+      <div id="state-error" hidden>
+        <h2>Could not predict</h2>
+        <p id="error-text"></p>
+      </div>
+
+      <div id="state-result" hidden>
+        <p class="kicker">Most likely condition</p>
+        <p class="condition" id="condition"></p>
+
+        <div class="confidence">
+          <div class="confidence-row">
+            <span>Model confidence</span>
+            <strong id="confidence-value"></strong>
+          </div>
+          <div class="bar"><span id="confidence-bar"></span></div>
+        </div>
+
+        <div id="others-section">
+          <h3>Other possibilities</h3>
+          <ul class="others" id="others"></ul>
+        </div>
+
+        
+      </div>
+    </aside>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
