@@ -1,92 +1,320 @@
-# Symptom Check: Flask API + HTML/CSS/JS frontend
+# 🩺 Symptom Check — Disease Prediction System
 
-A patient enters age, gender, temperature and symptoms. The page sends them to a Flask API, which uses your saved Decision Tree model (`decision_tree_model.joblib`) to predict the most likely condition.
+A simple machine-learning based health prediction project that takes a user's **age, gender, temperature, and symptoms** and predicts the most likely health condition.
 
-```
+The project uses a **Flask backend** for prediction and a simple **HTML, CSS, and JavaScript frontend** for the user interface.
+
+> **Note:** This project is created for learning and demonstration purposes. It is not intended to provide medical diagnosis or medical advice.
+
+---
+
+## ✨ Features
+
+* Enter basic patient information
+* Select symptoms from the frontend
+* Send prediction requests to a Flask API
+* Predict the most likely health condition
+* Display prediction confidence
+* Show other possible conditions
+* Simple and lightweight frontend
+* Easy to run locally
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* HTML
+* CSS
+* JavaScript
+
+### Backend
+
+* Python
+* Flask
+* Flask-CORS
+
+### Machine Learning
+
+* Scikit-learn
+* Decision Tree Classifier
+* Pandas
+* Joblib
+
+### Dataset
+
+* `Copy_of_Health.csv`
+
+---
+
+## 📁 Project Structure
+
+```text
 health_app/
+│
 ├── backend/
-│   ├── app.py               Flask API (loads your saved model)
-│   ├── train_model.py       optional: trains and saves a Decision Tree
-│   ├── model/               put decision_tree_model.joblib here
+│   ├── app.py
+│   ├── train_model.py
 │   ├── Copy_of_Health.csv
-│   └── requirements.txt
+│   ├── requirements.txt
+│   │
+│   └── model/
+│       ├── decision_tree_model.joblib
+│       └── scaler.joblib
+│
 └── frontend/
     ├── index.html
     ├── style.css
     └── script.js
 ```
 
-## How to run
+---
 
-**1. Add your model**
+## 🔄 How It Works
 
-Copy `decision_tree_model.joblib` into `backend/model/`.
+The basic workflow of the application is:
 
-**2. Start the backend**
+```text
+User enters details
+        ↓
+Age + Gender + Temperature
+        ↓
+Select symptoms
+        ↓
+Frontend sends JSON request
+        ↓
+Flask API receives the data
+        ↓
+Machine Learning Model
+        ↓
+Prediction + Confidence
+        ↓
+Result shown on the webpage
+```
+
+---
+
+## 📊 Input Features
+
+The model uses the following 16 features:
+
+| Feature             | Description          |
+| ------------------- | -------------------- |
+| `age`               | Patient age          |
+| `gender`            | Gender value         |
+| `bodypain`          | Body pain            |
+| `Hollow`            | Hollow               |
+| `cold and cough`    | Cold and cough       |
+| `cough`             | Cough                |
+| `fever`             | Temperature          |
+| `chest pain`        | Chest pain           |
+| `breathing problem` | Breathing difficulty |
+| `Throat pain`       | Throat pain          |
+| `head pain`         | Head pain            |
+| `stomach pain`      | Stomach pain         |
+| `diarrhea`          | Diarrhea             |
+| `omitting`          | Vomiting             |
+| `back pain`         | Back pain            |
+| `Swollen feet`      | Swollen feet         |
+
+For symptom fields:
+
+```text
+1 = Yes
+2 = No
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
+
+```bash
+git clone <your-repository-url>
+cd health_app
+```
+
+### 2. Go to the backend
 
 ```bash
 cd backend
+```
+
+### 3. Install dependencies
+
+```bash
 pip install -r requirements.txt
+```
+
+### 4. Train the model
+
+If the model file is not already available:
+
+```bash
+python train_model.py
+```
+
+This creates the trained model inside the `model` folder.
+
+### 5. Start the Flask server
+
+```bash
 python app.py
 ```
 
-The API runs at http://127.0.0.1:5000. Keep this terminal open.
+The backend will run at:
 
-**3. Open the frontend**
+```text
+http://127.0.0.1:5000
+```
 
-Double-click `frontend/index.html`, fill in the form and choose **Predict condition**.
+Keep this terminal running.
 
-## What kinds of saved model work
+---
 
-`app.py` checks your file when it starts and tells you if something is wrong.
+## 🌐 Run the Frontend
 
-| How the model was saved | What to do |
-|---|---|
-| `joblib.dump(model, "decision_tree_model.joblib")` trained on the raw features | Works as is |
-| Trained on scaled data (`StandardScaler`) | Also save the scaler with `joblib.dump(scaler, "scaler.joblib")` and put it in `backend/model/` |
-| A dictionary like `{"model": ..., "scaler": ...}` or a scikit-learn Pipeline | Works as is |
-| Target was `PID` (numbers) instead of `Problem` | Works: numbers are converted back to disease names |
-| Trained with the `id` or `PID` columns as inputs | Retrain without them: `X = df.drop(columns=["id", "PID", "Problem"])` |
+Open:
 
-The 16 inputs, in dataset order, are: age, gender, bodypain, Hollow, cold and cough, cough, fever, chest pain, breathing problem, Throat pain, head pain, stomach pain, diarrhea, omitting, back pain, Swollen feet.
+```text
+frontend/index.html
+```
 
-If you do not have a working model file, run `python train_model.py` inside `backend/`. It trains a Decision Tree and saves it to the right place.
+in your browser.
 
-## API
+Enter the required information, select symptoms, and click:
 
-`POST /predict` with JSON. Symptoms use `1` = yes and `2` = no.
+**Predict Condition**
+
+The frontend sends the information to the Flask API and displays the prediction returned by the model.
+
+---
+
+## 🔌 API
+
+### `POST /predict`
+
+The API accepts patient information in JSON format.
+
+Example:
 
 ```json
 {
-  "age": 35, "gender": 1, "fever": 101,
-  "bodypain": 1, "hollow": 2, "cold_and_cough": 2, "cough": 2,
-  "chest_pain": 2, "breathing_problem": 2, "throat_pain": 2,
-  "head_pain": 1, "stomach_pain": 2, "diarrhea": 2,
-  "omitting": 2, "back_pain": 2, "swollen_feet": 2
+  "age": 35,
+  "gender": 1,
+  "fever": 101,
+  "bodypain": 1,
+  "hollow": 2,
+  "cold_and_cough": 2,
+  "cough": 2,
+  "chest_pain": 2,
+  "breathing_problem": 2,
+  "throat_pain": 2,
+  "head_pain": 1,
+  "stomach_pain": 2,
+  "diarrhea": 2,
+  "omitting": 2,
+  "back_pain": 2,
+  "swollen_feet": 2
 }
 ```
 
-Response:
+Example response:
 
 ```json
 {
   "prediction": "Dengue",
   "confidence": 1.0,
   "top": [
-    { "condition": "Dengue", "probability": 1.0 },
-    { "condition": "Acidity", "probability": 0.0 },
-    { "condition": "Allergic Side Effects", "probability": 0.0 }
+    {
+      "condition": "Dengue",
+      "probability": 1.0
+    },
+    {
+      "condition": "Acidity",
+      "probability": 0.0
+    },
+    {
+      "condition": "Allergic Side Effects",
+      "probability": 0.0
+    }
   ]
 }
 ```
 
-Invalid input returns status `400` with `{"error": "..."}`.
+---
 
-Allowed values: age 15 to 95, gender 1 or 2, fever 95 to 108 (the data covers 97 to 105).
+## ⚙️ Input Validation
 
-## Notes
+The backend currently accepts:
 
-- Gender is mapped as `1` = male, `2` = female. The dataset does not say which is which, so change the labels in `index.html` if yours is the other way round.
-- The dataset column `omitting` is shown as "Vomiting" in the form.
-- A fully grown Decision Tree usually gives 100% to one condition and 0% to the rest, so the confidence shown is often 100%. That does not mean the prediction is certain.
-- This project is for learning and is not medical advice.
+* **Age:** 15–95
+* **Gender:** 1 or 2
+* **Temperature:** 95–108
+
+The dataset itself contains temperature values mainly between **97 and 105**.
+
+Invalid input is returned with HTTP status:
+
+```text
+400 Bad Request
+```
+
+---
+
+## 🧠 Model
+
+The current version uses a **Decision Tree Classifier** trained on the health dataset.
+
+The model is saved using Joblib:
+
+```text
+decision_tree_model.joblib
+```
+
+If scaling was used during training, the corresponding scaler is also stored:
+
+```text
+scaler.joblib
+```
+
+The application loads these files when the Flask server starts.
+
+---
+
+## 📝 Important Notes
+
+* The dataset uses `Problem` as the prediction target.
+* `id` and `PID` are not used as model input features.
+* The dataset column `omitting` is displayed as **Vomiting** in the frontend.
+* Gender values depend on the original dataset encoding.
+* A fully grown Decision Tree can produce very high confidence values, sometimes even 100%.
+* High model confidence should not be interpreted as medical certainty.
+
+---
+
+## 🎯 Purpose
+
+This project demonstrates how a machine-learning model can be connected to a web application.
+
+It combines:
+
+```text
+Machine Learning
+       +
+Flask API
+       +
+HTML/CSS/JavaScript
+       =
+End-to-End ML Web Application
+```
+
+---
+
+## ⚠️ Disclaimer
+
+This project is intended **only for educational and demonstration purposes**.
+
+It should not be used as a substitute for professional medical advice, diagnosis, or treatment.
