@@ -313,7 +313,7 @@ End-to-End ML Web Application
 
 ---
 ## User Interface
-<img width="301" height="266" alt="Screenshot 2026-10-01 151450" src="https://github.com/user-attachments/assets/38818ebc-729d-498e-bf8d-43137076b499" />
+<img width="100%"  alt="Screenshot 2026-10-01 151450" src="https://github.com/user-attachments/assets/38818ebc-729d-498e-bf8d-43137076b499" />
 
 ---
 
