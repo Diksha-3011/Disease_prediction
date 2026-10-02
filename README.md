@@ -271,7 +271,11 @@ The current version uses a **Decision Tree Classifier** trained on the health da
 The model is saved using Joblib:
 
 ```text
-decision_tree_model.joblib
+Decision_tree_model.joblib
+XGBoost.joblib
+LightGBM.joblib
+Random_Forest.joblib
+KNN.joblib
 ```
 
 If scaling was used during training, the corresponding scaler is also stored:
